@@ -8,7 +8,7 @@
     "dev": "live-server .",
     "test": "tape test/*.js",
     "watch": "runwatch \"**/**.js\" -r \"npm test\"",
-    "build": "browserify index.js -o bundle.js",
+    "build": "browserify example/index.js -o example/bundle.js",
     "dev:bundle": "watchify example/index.js -o example/bundle.js -d -v",
     "dev:serve": "live-server .",
     "prepublish": "ipfs-shrinkwrap"

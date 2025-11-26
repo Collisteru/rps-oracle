@@ -1,5 +1,5 @@
 // example/index.js - Complete version
-var predict = require(".."); // Require src/index.js
+var predict = require("../src"); // Require src/index.js
 var kefir = require("kefir");
 var mean = require("../src/running-mean");
 
