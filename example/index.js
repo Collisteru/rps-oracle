@@ -21,6 +21,20 @@ function whichKey(e) {
   return e.which;
 }
 
+// --- Function to map letter to emoji ---
+function getEmoji(move) {
+  switch (move) {
+    case "r":
+      return "🪨"; // Rock
+    case "p":
+      return "📄"; // Paper
+    case "s":
+      return "✂️"; // Scissors
+    default:
+      return move;
+  }
+}
+
 // Determine winner: returns 'ai', 'player', or 'tie'
 function determineWinner(aiMove, playerMove) {
   if (aiMove === playerMove) return "tie";
@@ -42,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   var pwins = document.getElementById("player_wins");
   var aiwins = document.getElementById("ai_wins");
   var ties = document.getElementById("ties");
+  var totalGames = document.getElementById("total_games");
   var lastGuessesEl = document.getElementById("lastGuesses");
 
   // Track game stats
@@ -91,32 +106,66 @@ document.addEventListener("DOMContentLoaded", () => {
     aiwins.innerHTML = aiWins;
     pwins.innerHTML = playerWins;
     ties.innerHTML = tieCount;
+    totalGames.innerHTML = gamesPlayed;
 
-    // Calculate AI score: 0.5 + (AI_wins - AI_losses) / (2 * games_played)
+    // Calculate Your score: 0.5 + (AI_wins - AI_losses) / (2 * games_played)
     var yourScore = 0.5 + (playerWins - aiWins) / (2 * (aiWins + playerWins));
 
     // Update the avg element with AI score
     avgEl.innerHTML = "Your Score: " + (yourScore * 100).toFixed(1) + "%";
   });
 
-  predictionS.slidingWindow(4).onValue((ps) => {
-    var guesses = ps
-      .map((p) => {
-        var aiMove = p[0];
-        var playerMove = p[1];
-        var winner = determineWinner(aiMove, playerMove);
-        var color =
-          winner === "ai"
-            ? "red"
-            : winner === "player"
-            ? "lightgreen"
-            : "yellow";
-        return `<span style="background-color:${color}">AI played: ${aiMove}, You played: ${playerMove} (${
-          winner === "ai" ? "AI wins" : winner === "player" ? "You win" : "Tie"
-        })</span><br>`;
-      })
-      .reverse()
-      .join("");
-    lastGuessesEl.innerHTML = guesses;
-  });
+  // --- Global variable to track the game number ---
+  let gameCount = 0;
+
+  // A new function to handle the update logic
+  function updateGameHistory(ps) {
+    // 1. Get the latest game from the sliding window
+    // Since you are using .reverse() later, the latest game is ps[ps.length - 1]
+    // before the reverse, or ps[0] after the reverse logic.
+    // Let's assume the sliding window gives the oldest game first (ps[0])
+    // and the newest game last (ps[ps.length - 1]).
+
+    // Get the latest game data
+    const latestGame = ps[ps.length - 1];
+    if (!latestGame) return; // Guard against empty array
+
+    const aiMove = latestGame[0];
+    const playerMove = latestGame[1];
+    const winner = determineWinner(aiMove, playerMove);
+
+    // 2. Increment the global game counter
+    gameCount++;
+
+    // 3. Determine color and emoji output for the latest game
+    const color =
+      winner === "ai" ? "red" : winner === "player" ? "lightgreen" : "yellow";
+
+    // 4. Create the new HTML entry for the latest game
+    const newGuessHtml = `<span style="background-color:${color}">
+        Game ${gameCount}: AI played: ${getEmoji(
+      aiMove
+    )}, You played: ${getEmoji(playerMove)} (${
+      winner === "ai" ? "AI wins" : winner === "player" ? "You win" : "Tie"
+    })</span><br>`;
+
+    // 5. Append the new game to the history container
+
+    // Since you used .reverse() in your original code, it suggests you want
+    // the newest game at the TOP. We use insertAdjacentHTML to prepend it.
+
+    // Check if the element exists before trying to modify it
+    if (lastGuessesEl) {
+      lastGuessesEl.insertAdjacentHTML("afterbegin", newGuessHtml);
+
+      // OPTIONAL: Keep the history trimmed to the window size (100)
+      // This is complex because we are no longer using .map(). You might want
+      // to re-think if the sliding window is necessary if you are only
+      // using the latest entry. If you MUST trim, you'd need to manually
+      // count and remove the last child elements if the count exceeds 100.
+    }
+  }
+
+  // --- Replace your original .onValue() block with the new logic ---
+  predictionS.slidingWindow(100).onValue(updateGameHistory);
 });

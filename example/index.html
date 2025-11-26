@@ -116,9 +116,17 @@
         background: #f8f9fa;
         padding: 20px;
         border-radius: 10px;
+        /* Retain original styling */
         min-height: 100px;
         font-family: "Courier New", monospace;
         line-height: 1.8;
+
+        /* --- NEW SCROLLING PROPERTIES --- */
+        /* Set a maximum height so the content can't grow past this limit */
+        max-height: 400px; /* Adjust this value (e.g., to 200px, 300px, 400px) based on your layout preference */
+        /* Enable vertical scrolling when content exceeds the max-height */
+        overflow-y: scroll;
+        /* --- END NEW PROPERTIES --- */
       }
 
       #lastGuesses span {
@@ -174,15 +182,19 @@
           <div class="stat-label">AI Wins</div>
           <div class="stat-value" id="ai_wins">0</div>
         </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Total Games</div>
+          <div class="stat-value" id="total_games">0</div>
+        </div>
       </div>
 
       <div id="avg">Waiting for input...</div>
 
       <div class="info-text">
-        How many games I win compared to how many games with a winner in total.
-        <br />(I'll start counting once we've played a few games) <br /><strong
-          >Can you keep your score above 50%?</strong
-        >
+        <!-- 0.5 + (playerWins - aiWins) / (2 * (aiWins + playerWins));-->
+        Your score is 0.5 + (yourWins - AIWins) / (2*(yourWins + AIWins))
+        <br /><strong>Can you keep your score above 50%?</strong>
       </div>
 
       <h2 class="section-title">📊 Recent Games (most recent first)</h2>
