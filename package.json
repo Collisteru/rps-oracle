@@ -10,15 +10,13 @@
     "watch": "runwatch \"**/**.js\" -r \"npm test\"",
     "build": "browserify example/index.js -o example/bundle.js",
     "dev:bundle": "watchify example/index.js -o example/bundle.js -d -v",
-    "dev:serve": "live-server .",
-    "prepublish": "ipfs-shrinkwrap"
+    "dev:serve": "live-server ."
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.13.2",
     "babelify": "^7.3.0",
     "browserify": "^13.3.0",
     "html-inline": "^1.2.0",
-    "ipfs-shrinkwrap": "^1.0.5",
     "live-server": "^1.2.2",
     "prng-well1024a": "^2.0.0",
     "runwatch": "^0.1.3",
@@ -32,6 +30,5 @@
     "onready": "0.0.3",
     "permutation": "0.0.1",
     "running-mean": "^0.1.0"
-  },
-  "ipfs-shrinkwrap": "QmNPw5vJPf1KTNJwyezkXQrkHLZpfxoeuLs9po34Vqn7BE"
+  }
 }
